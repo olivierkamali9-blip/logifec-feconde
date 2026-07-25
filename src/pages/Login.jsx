@@ -28,7 +28,7 @@ export default function Login() {
     <div style={styles.page} className="lf-login-page">
       <div style={styles.leftPanel} className="lf-login-left">
         <div style={styles.brandMark}>
-          <div style={styles.logoCircle}>FC</div>
+          <img src="/logo-feconde.png" alt="Logo FECONDE" style={styles.logoImg} />
           <div>
             <div style={styles.brandName}>LogiFec</div>
             <div style={styles.brandSub}>Gestion de flotte — FECONDE</div>
@@ -44,6 +44,7 @@ export default function Login() {
         </div>
 
         <div style={styles.footerNote}>
+          <img src="/logo-feconde.png" alt="" style={styles.footerLogo} />
           Femme Congolaise pour le Développement — Bunia, Ituri
         </div>
       </div>
@@ -104,6 +105,7 @@ const styles = {
     justifyContent: 'space-between',
   },
   brandMark: { display: 'flex', alignItems: 'center', gap: 14 },
+  logoImg: { width: 44, height: 44, borderRadius: '50%', objectFit: 'cover', background: '#fff', flexShrink: 0 },
   logoCircle: {
     width: 44, height: 44, borderRadius: '50%',
     background: '#1F8F5F', color: '#fff',
@@ -115,7 +117,8 @@ const styles = {
   heroText: { maxWidth: 440 },
   heroTitle: { fontSize: 40, lineHeight: 1.15, color: '#fff', fontWeight: 600, letterSpacing: '-0.01em' },
   heroDesc: { fontSize: 15.5, lineHeight: 1.6, color: '#C7D1DB', marginTop: 20 },
-  footerNote: { fontSize: 12.5, color: '#8494A3', letterSpacing: '0.02em' },
+  footerNote: { fontSize: 12.5, color: '#8494A3', letterSpacing: '0.02em', display: 'flex', alignItems: 'center', gap: 10 },
+  footerLogo: { width: 22, height: 22, borderRadius: '50%', objectFit: 'cover', background: '#fff', flexShrink: 0 },
   rightPanel: {
     display: 'flex', alignItems: 'center', justifyContent: 'center',
     background: 'var(--sand)', padding: 24,

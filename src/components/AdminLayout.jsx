@@ -22,7 +22,7 @@ export default function AdminLayout() {
     <div style={styles.wrap} className="lf-admin-wrap">
       <aside style={styles.sidebar} className="lf-sidebar">
         <div style={styles.brand} className="lf-sidebar-brand">
-          <div style={styles.logoCircle}>FC</div>
+          <img src="/logo-feconde.png" alt="Logo FECONDE" style={styles.logoImg} />
           <div>
             <div style={styles.brandName}>LogiFec</div>
             <div style={styles.brandSub}>FECONDE</div>
@@ -81,6 +81,7 @@ const styles = {
     position: 'sticky', top: 0, height: '100vh',
   },
   brand: { display: 'flex', alignItems: 'center', gap: 10, padding: '0 8px 28px' },
+  logoImg: { width: 34, height: 34, borderRadius: '50%', objectFit: 'cover', background: '#fff', flexShrink: 0 },
   logoCircle: {
     width: 34, height: 34, borderRadius: '50%', background: '#1F8F5F',
     display: 'flex', alignItems: 'center', justifyContent: 'center',

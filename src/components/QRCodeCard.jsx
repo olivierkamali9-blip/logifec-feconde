@@ -47,6 +47,7 @@ export default function QRCodeCard({ vehicule }) {
   return (
     <div>
       <div ref={cardRef} style={styles.card}>
+        <img src="/logo-feconde.png" alt="" style={styles.cardLogo} crossOrigin="anonymous" />
         <div style={styles.cardHeader}>LOGIFEC — FECONDE</div>
         <div style={styles.qrWrap}>
           <QRCodeCanvas value={scanUrl} size={180} level="H" fgColor="#142E4A" />
@@ -78,6 +79,7 @@ const styles = {
     fontSize: 11, fontWeight: 700, color: '#142E4A', letterSpacing: '0.08em',
     marginBottom: 14, textTransform: 'uppercase',
   },
+  cardLogo: { width: 40, height: 40, borderRadius: '50%', objectFit: 'cover', marginBottom: 6 },
   qrWrap: { padding: 10, background: '#fff', border: '1px solid #E3E1DA', borderRadius: 8 },
   idEngin: {
     fontSize: 17, fontWeight: 700, color: '#142E4A', marginTop: 14,

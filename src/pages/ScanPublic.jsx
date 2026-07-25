@@ -95,7 +95,7 @@ export default function ScanPublic() {
     <div style={styles.page}>
       <div style={styles.headerBar}>
         <div style={styles.brandMini}>
-          <div style={styles.logoCircle}>FC</div>
+          <img src="/logo-feconde.png" alt="Logo FECONDE" style={styles.logoImg} />
           <span style={styles.brandText}>LogiFec — FECONDE</span>
         </div>
       </div>
@@ -245,6 +245,7 @@ const styles = {
   page: { minHeight: '100vh', background: 'var(--sand)' },
   headerBar: { background: 'var(--navy-deep)', padding: '14px 20px' },
   brandMini: { display: 'flex', alignItems: 'center', gap: 10, maxWidth: 640, margin: '0 auto' },
+  logoImg: { width: 28, height: 28, borderRadius: '50%', objectFit: 'cover', background: '#fff', flexShrink: 0 },
   logoCircle: {
     width: 28, height: 28, borderRadius: '50%', background: 'var(--emerald)', color: '#fff',
     display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 700, fontFamily: 'var(--font-display)',
