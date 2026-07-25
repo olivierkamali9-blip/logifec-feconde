@@ -121,7 +121,7 @@ export default function ScanPublic() {
           </div>
         )}
 
-        <div style={styles.dashRow}>
+        <div style={styles.dashRow} className="lf-dash-row">
           <MiniStat icon={Gauge} label="Base affectée" value={vehicule.base_affectee || '—'} />
           <MiniStat icon={Wrench} label="Chauffeur principal" value={vehicule.chauffeur_principal || '—'} />
           <MiniStat icon={Fuel} label="Carburant" value={vehicule.type_carburant || '—'} />

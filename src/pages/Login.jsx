@@ -25,8 +25,8 @@ export default function Login() {
   }
 
   return (
-    <div style={styles.page}>
-      <div style={styles.leftPanel}>
+    <div style={styles.page} className="lf-login-page">
+      <div style={styles.leftPanel} className="lf-login-left">
         <div style={styles.brandMark}>
           <div style={styles.logoCircle}>FC</div>
           <div>
@@ -36,7 +36,7 @@ export default function Login() {
         </div>
 
         <div style={styles.heroText}>
-          <h1 style={styles.heroTitle}>Chaque engin,<br/>son dossier complet.</h1>
+          <h1 style={styles.heroTitle} className="lf-login-hero-title">Chaque engin,<br/>son dossier complet.</h1>
           <p style={styles.heroDesc}>
             Inventaire, documents, maintenance et suivi carburant de la flotte FECONDE,
             centralisés et accessibles par code QR sur le terrain.
@@ -49,7 +49,7 @@ export default function Login() {
       </div>
 
       <div style={styles.rightPanel}>
-        <form onSubmit={handleSubmit} style={styles.card}>
+        <form onSubmit={handleSubmit} style={styles.card} className="lf-card">
           <div style={styles.cardIcon}><ShieldCheck size={22} color="var(--navy)" strokeWidth={1.75} /></div>
           <h2 style={styles.cardTitle}>Espace administration</h2>
           <p style={styles.cardSub}>Connectez-vous pour gérer la flotte.</p>
@@ -92,6 +92,8 @@ const styles = {
     minHeight: '100vh',
     display: 'grid',
     gridTemplateColumns: '1.1fr 1fr',
+    width: '100%',
+    overflowX: 'hidden',
   },
   leftPanel: {
     background: 'linear-gradient(160deg, #142E4A 0%, #0C1E33 100%)',

@@ -61,8 +61,8 @@ export default function Administrateurs() {
   }
 
   return (
-    <div style={styles.page}>
-      <header style={styles.header}>
+    <div style={styles.page} className="lf-page">
+      <header style={styles.header} className="lf-page-header">
         <div>
           <h1 style={styles.title}>Administrateurs</h1>
           <p style={styles.subtitle}>Personnes ayant accès à la gestion de la flotte</p>
@@ -75,7 +75,7 @@ export default function Administrateurs() {
 
       {showForm && (
         <form onSubmit={handleInvite} style={styles.formCard}>
-          <div style={styles.formRow}>
+          <div style={styles.formRow} className="lf-form-row">
             <div style={{ flex: 1 }}>
               <label style={styles.label}>Nom complet</label>
               <input style={styles.input} required value={nom} onChange={(e) => setNom(e.target.value)} placeholder="Ex: Godgive Alimwimana" />
@@ -85,7 +85,7 @@ export default function Administrateurs() {
               <input type="email" style={styles.input} required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="prenom.nom@feconde.org" />
             </div>
           </div>
-          <div style={styles.formRow}>
+          <div style={styles.formRow} className="lf-form-row">
             <div style={{ flex: 1 }}>
               <label style={styles.label}>Mot de passe temporaire</label>
               <input type="text" style={styles.input} required minLength={6} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Au moins 6 caractères" />
@@ -121,8 +121,8 @@ export default function Administrateurs() {
 }
 
 const styles = {
-  page: { padding: '36px 44px', maxWidth: 900 },
-  header: { display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 24 },
+  page: { padding: '36px 44px', maxWidth: 900, width: '100%', boxSizing: 'border-box' },
+  header: { display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 24, flexWrap: 'wrap', gap: 12 },
   title: { fontSize: 26 },
   subtitle: { fontSize: 13.5, color: 'var(--ink-soft)', marginTop: 5 },
   addBtn: {

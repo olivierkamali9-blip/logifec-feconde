@@ -73,7 +73,7 @@ export default function DocumentsManager({ vehiculeId, documents, onChange, admi
 
       {showForm && (
         <form onSubmit={handleUpload} style={styles.uploadForm}>
-          <div style={styles.formRow}>
+          <div style={styles.formRow} className="lf-form-row">
             <div style={{ flex: 1 }}>
               <label style={styles.label}>Type de document</label>
               <select value={typeDocument} onChange={(e) => setTypeDocument(e.target.value)} style={styles.select}>
@@ -88,7 +88,7 @@ export default function DocumentsManager({ vehiculeId, documents, onChange, admi
             )}
           </div>
 
-          <div style={styles.formRow}>
+          <div style={styles.formRow} className="lf-form-row">
             <div style={{ flex: 1 }}>
               <label style={styles.label}>Fichier (PDF, Word ou image)</label>
               <input

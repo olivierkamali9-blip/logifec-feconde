@@ -30,7 +30,7 @@ export default function Parametres() {
   }
 
   return (
-    <div style={styles.page}>
+    <div style={styles.page} className="lf-page">
       <header style={styles.header}>
         <h1 style={styles.title}>Paramètres</h1>
         <p style={styles.subtitle}>Configuration générale de LogiFec</p>
@@ -77,7 +77,7 @@ export default function Parametres() {
 }
 
 const styles = {
-  page: { padding: '36px 44px', maxWidth: 720 },
+  page: { padding: '36px 44px', maxWidth: 720, width: '100%', boxSizing: 'border-box' },
   header: { marginBottom: 28 },
   title: { fontSize: 26 },
   subtitle: { fontSize: 13.5, color: 'var(--ink-soft)', marginTop: 5 },

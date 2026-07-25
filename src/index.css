@@ -64,3 +64,48 @@ a { color: inherit; text-decoration: none; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--line); border-radius: 10px; }
 ::-webkit-scrollbar-thumb:hover { background: #C9C6BB; }
+
+/* ============ RESPONSIVE ============ */
+
+@media (max-width: 860px) {
+  .lf-login-page { grid-template-columns: 1fr !important; }
+  .lf-login-left { padding: 32px 24px !important; }
+  .lf-login-hero-title { font-size: 28px !important; }
+
+  .lf-admin-wrap { grid-template-columns: 1fr !important; }
+  .lf-sidebar {
+    position: sticky !important; top: 0 !important; height: auto !important;
+    flex-direction: row !important; align-items: center !important;
+    padding: 12px 14px !important; z-index: 50 !important;
+    overflow-x: auto !important;
+  }
+  .lf-sidebar-brand { padding: 0 10px 0 0 !important; flex-shrink: 0 !important; }
+  .lf-sidebar-nav { flex-direction: row !important; flex: none !important; gap: 4px !important; }
+  .lf-nav-item span { display: none !important; }
+  .lf-nav-item { padding: 9px !important; }
+  .lf-sidebar-footer { display: none !important; }
+  .lf-mobile-logout { display: flex !important; }
+
+  .lf-page { padding: 20px 16px !important; }
+  .lf-page-header { flex-direction: column !important; align-items: flex-start !important; gap: 12px !important; }
+
+  .lf-stats-grid { grid-template-columns: 1fr 1fr !important; }
+  .lf-grid-2 { grid-template-columns: 1fr !important; }
+
+  .lf-fiche-layout { grid-template-columns: 1fr !important; }
+  .lf-fiche-layout > div:last-child { position: static !important; top: auto !important; }
+  .lf-fields-grid { grid-template-columns: 1fr !important; }
+  .lf-form-row { flex-direction: column !important; }
+
+  .lf-table-head { display: none !important; }
+  .lf-table-row { flex-wrap: wrap !important; }
+
+  .lf-dash-row { grid-template-columns: 1fr 1fr !important; }
+}
+
+@media (max-width: 480px) {
+  .lf-stats-grid { grid-template-columns: 1fr !important; }
+  .lf-dash-row { grid-template-columns: 1fr !important; }
+  .lf-login-hero-title { font-size: 24px !important; }
+  .lf-card { padding: 26px 20px !important; }
+}

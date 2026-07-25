@@ -117,12 +117,12 @@ export default function VehiculeFiche() {
   if (loading) return <div style={styles.page}><p style={{ color: 'var(--ink-soft)' }}>Chargement...</p></div>
 
   return (
-    <div style={styles.page}>
+    <div style={styles.page} className="lf-page">
       <Link to="/admin/vehicules" style={styles.backLink}>
         <ArrowLeft size={15} /> Retour aux véhicules
       </Link>
 
-      <div style={styles.layout}>
+      <div style={styles.layout} className="lf-fiche-layout">
         <form onSubmit={handleSave} style={styles.formCol}>
           <div style={styles.topCard}>
             <div style={styles.photoUpload}>
@@ -152,7 +152,7 @@ export default function VehiculeFiche() {
           {FORM_SECTIONS.map((section) => (
             <div key={section.title} style={styles.sectionCard}>
               <h3 style={styles.sectionTitle}>{section.title}</h3>
-              <div style={styles.fieldsGrid}>
+              <div style={styles.fieldsGrid} className="lf-fields-grid">
                 {section.fields.map((f) => (
                   <div key={f.key} style={f.type === 'textarea' ? { gridColumn: '1 / -1' } : {}}>
                     <label style={styles.label}>{f.label}</label>
@@ -220,14 +220,14 @@ export default function VehiculeFiche() {
 }
 
 const styles = {
-  page: { padding: '32px 44px 60px', maxWidth: 1200 },
+  page: { padding: '32px 44px 60px', maxWidth: 1200, width: '100%', boxSizing: 'border-box' },
   backLink: { display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 13, color: 'var(--ink-soft)', marginBottom: 20, fontWeight: 500 },
   layout: { display: 'grid', gridTemplateColumns: '1.5fr 1fr', gap: 24, alignItems: 'start' },
-  formCol: { display: 'flex', flexDirection: 'column', gap: 18 },
-  sideCol: { display: 'flex', flexDirection: 'column', gap: 18, position: 'sticky', top: 24 },
+  formCol: { display: 'flex', flexDirection: 'column', gap: 18, minWidth: 0 },
+  sideCol: { display: 'flex', flexDirection: 'column', gap: 18, position: 'sticky', top: 24, minWidth: 0 },
   topCard: {
     background: '#fff', border: '1px solid var(--line-soft)', borderRadius: 'var(--radius-md)',
-    padding: 22, display: 'flex', gap: 18, alignItems: 'center', boxShadow: 'var(--shadow-sm)',
+    padding: 22, display: 'flex', gap: 18, alignItems: 'center', boxShadow: 'var(--shadow-sm)', flexWrap: 'wrap',
   },
   photoUpload: { position: 'relative', flexShrink: 0 },
   photoLabel: { display: 'block', width: 84, height: 84, borderRadius: 12, overflow: 'hidden', cursor: 'pointer', position: 'relative' },

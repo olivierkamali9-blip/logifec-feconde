@@ -33,8 +33,8 @@ export default function Dashboard() {
   if (loading) return <div style={styles.page}><p style={{color:'var(--ink-soft)'}}>Chargement...</p></div>
 
   return (
-    <div style={styles.page}>
-      <header style={styles.header}>
+    <div style={styles.page} className="lf-page">
+      <header style={styles.header} className="lf-page-header">
         <div>
           <h1 style={styles.title}>Tableau de bord</h1>
           <p style={styles.subtitle}>Vue d'ensemble de la flotte FECONDE</p>
@@ -44,14 +44,14 @@ export default function Dashboard() {
         </Link>
       </header>
 
-      <div style={styles.statsGrid}>
+      <div style={styles.statsGrid} className="lf-stats-grid">
         <StatCard icon={Truck} label="Véhicules enregistrés" value={total} color="var(--navy)" />
         <StatCard icon={Truck} label="Actifs" value={actifs} color="var(--emerald)" />
         <StatCard icon={Wrench} label="En maintenance / panne" value={enMaintenance} color="var(--amber)" />
         <StatCard icon={Ban} label="Hors service" value={horsService} color="var(--coral)" />
       </div>
 
-      <div style={styles.grid2}>
+      <div style={styles.grid2} className="lf-grid-2">
         <div style={styles.panel}>
           <div style={styles.panelHead}>
             <AlertTriangle size={16} color="var(--coral)" />
@@ -120,8 +120,8 @@ function StatCard({ icon: Icon, label, value, color }) {
 }
 
 const styles = {
-  page: { padding: '36px 44px', maxWidth: 1200 },
-  header: { display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 32 },
+  page: { padding: '36px 44px', maxWidth: 1200, width: '100%', boxSizing: 'border-box' },
+  header: { display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 32, flexWrap: 'wrap', gap: 12 },
   title: { fontSize: 26 },
   subtitle: { fontSize: 13.5, color: 'var(--ink-soft)', marginTop: 5 },
   addBtn: {

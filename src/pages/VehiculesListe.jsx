@@ -30,8 +30,8 @@ export default function VehiculesListe() {
   })
 
   return (
-    <div style={styles.page}>
-      <header style={styles.header}>
+    <div style={styles.page} className="lf-page">
+      <header style={styles.header} className="lf-page-header">
         <div>
           <h1 style={styles.title}>Véhicules</h1>
           <p style={styles.subtitle}>{vehicules.length} engin{vehicules.length > 1 ? 's' : ''} enregistré{vehicules.length > 1 ? 's' : ''}</p>
@@ -60,7 +60,7 @@ export default function VehiculesListe() {
         </div>
       ) : (
         <div style={styles.tableWrap}>
-          <div style={styles.tableHeadRow}>
+          <div style={styles.tableHeadRow} className="lf-table-head">
             <div style={{ width: 46 }} />
             <div style={{ flex: 2 }}>Véhicule</div>
             <div style={{ flex: 1 }}>ID Engin</div>
@@ -70,7 +70,7 @@ export default function VehiculesListe() {
             <div style={{ width: 20 }} />
           </div>
           {filtered.map((v) => (
-            <Link key={v.id} to={`/admin/vehicules/${v.id}`} style={styles.row}>
+            <Link key={v.id} to={`/admin/vehicules/${v.id}`} style={styles.row} className="lf-table-row">
               <div style={styles.photoBox}>
                 {v.photo_url ? <img src={v.photo_url} alt="" style={styles.photoImg} /> : <Truck size={16} color="var(--ink-soft)" />}
               </div>
@@ -92,8 +92,8 @@ export default function VehiculesListe() {
 }
 
 const styles = {
-  page: { padding: '36px 44px', maxWidth: 1200 },
-  header: { display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 24 },
+  page: { padding: '36px 44px', maxWidth: 1200, width: '100%', boxSizing: 'border-box' },
+  header: { display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 24, flexWrap: 'wrap', gap: 12 },
   title: { fontSize: 26 },
   subtitle: { fontSize: 13.5, color: 'var(--ink-soft)', marginTop: 5 },
   addBtn: {

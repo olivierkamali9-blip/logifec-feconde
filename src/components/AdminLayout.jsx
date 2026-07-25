@@ -19,9 +19,9 @@ export default function AdminLayout() {
   ]
 
   return (
-    <div style={styles.wrap}>
-      <aside style={styles.sidebar}>
-        <div style={styles.brand}>
+    <div style={styles.wrap} className="lf-admin-wrap">
+      <aside style={styles.sidebar} className="lf-sidebar">
+        <div style={styles.brand} className="lf-sidebar-brand">
           <div style={styles.logoCircle}>FC</div>
           <div>
             <div style={styles.brandName}>LogiFec</div>
@@ -29,24 +29,29 @@ export default function AdminLayout() {
           </div>
         </div>
 
-        <nav style={styles.nav}>
+        <nav style={styles.nav} className="lf-sidebar-nav">
           {navItems.map(({ to, icon: Icon, label, end }) => (
             <NavLink
               key={to}
               to={to}
               end={end}
+              className="lf-nav-item"
               style={({ isActive }) => ({
                 ...styles.navItem,
                 ...(isActive ? styles.navItemActive : {}),
               })}
             >
               <Icon size={17} strokeWidth={1.8} />
-              {label}
+              <span>{label}</span>
             </NavLink>
           ))}
         </nav>
 
-        <div style={styles.sidebarFooter}>
+        <button onClick={handleLogout} style={styles.mobileLogoutBtn} className="lf-mobile-logout">
+          <LogOut size={17} strokeWidth={1.8} />
+        </button>
+
+        <div style={styles.sidebarFooter} className="lf-sidebar-footer">
           <div style={styles.userBox}>
             <div style={styles.userAvatar}>{(adminProfile?.nom || '?').charAt(0).toUpperCase()}</div>
             <div style={{ minWidth: 0 }}>
@@ -106,4 +111,9 @@ const styles = {
     cursor: 'pointer', fontWeight: 500,
   },
   main: { background: 'var(--sand)', minHeight: '100vh' },
+  mobileLogoutBtn: {
+    display: 'none', alignItems: 'center', justifyContent: 'center',
+    width: 36, height: 36, borderRadius: 8, background: 'rgba(255,255,255,0.08)',
+    border: 'none', color: '#B9C4D0', cursor: 'pointer', flexShrink: 0, marginLeft: 8,
+  },
 }
