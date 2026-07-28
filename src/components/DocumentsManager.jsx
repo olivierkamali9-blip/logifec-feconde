@@ -32,6 +32,8 @@ export default function DocumentsManager({ vehiculeId, documents, onChange, admi
 
     const { data: urlData } = supabase.storage.from('vehicule-documents').getPublicUrl(path)
 
+    const safeAdminId = adminId && adminId !== 'undefined' ? adminId : null
+
     const { error: insertError } = await supabase.from('documents').insert({
       vehicule_id: vehiculeId,
       type_document: typeDocument,
@@ -39,7 +41,7 @@ export default function DocumentsManager({ vehiculeId, documents, onChange, admi
       fichier_url: urlData.publicUrl,
       nom_fichier: file.name,
       date_expiration: dateExpiration || null,
-      uploaded_by: adminId || null,
+      uploaded_by: safeAdminId,
     })
 
     setUploading(false)

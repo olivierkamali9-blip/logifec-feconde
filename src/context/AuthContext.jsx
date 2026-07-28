@@ -28,8 +28,11 @@ export function AuthProvider({ children }) {
   }, [])
 
   async function fetchProfile(userId) {
-    const { data } = await supabase.from('admins').select('*').eq('id', userId).single()
-    setAdminProfile(data)
+    const { data, error } = await supabase.from('admins').select('*').eq('id', userId).single()
+    if (error) {
+      console.error('Erreur chargement profil admin:', error.message)
+    }
+    setAdminProfile(data || null)
     setLoading(false)
   }
 

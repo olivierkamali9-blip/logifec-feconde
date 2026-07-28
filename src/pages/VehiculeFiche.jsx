@@ -63,6 +63,11 @@ export default function VehiculeFiche() {
   function handlePhotoSelect(e) {
     const f = e.target.files[0]
     if (!f) return
+    if (f.size > 8 * 1024 * 1024) {
+      setError("La photo est trop lourde (max 8 Mo). Choisissez une photo plus légère.")
+      return
+    }
+    setError('')
     setPhotoFile(f)
     setPhotoPreview(URL.createObjectURL(f))
   }
@@ -105,12 +110,13 @@ export default function VehiculeFiche() {
     payload.statut = form.statut || 'Actif'
 
     if (isNew) {
-      if (!adminProfile?.id) {
-        setError("Profil administrateur non chargé. Patientez un instant et réessayez.")
+      const validCreatorId = adminProfile?.id && adminProfile.id !== 'undefined' ? adminProfile.id : null
+      if (!validCreatorId) {
+        setError("Profil administrateur non chargé correctement. Rechargez la page et réessayez.")
         setSaving(false)
         return
       }
-      payload.created_by = adminProfile.id
+      payload.created_by = validCreatorId
       const { data, error: insertError } = await supabase.from('vehicules').insert(payload).select().single()
       setSaving(false)
       if (insertError) { setError(`Erreur lors de la création : ${insertError.message}`); return }
