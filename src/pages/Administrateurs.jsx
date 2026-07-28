@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../context/AuthContext'
-import { UserPlus, Mail, X } from 'lucide-react'
+import { UserPlus, Mail, X, Trash2 } from 'lucide-react'
 
 export default function Administrateurs() {
   const { adminProfile } = useAuth()
@@ -14,6 +14,7 @@ export default function Administrateurs() {
   const [error, setError] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const [success, setSuccess] = useState('')
+  const [deletingId, setDeletingId] = useState(null)
 
   useEffect(() => { load() }, [])
 
@@ -22,6 +23,23 @@ export default function Administrateurs() {
     const { data } = await supabase.from('admins').select('*').order('created_at', { ascending: true })
     setAdmins(data || [])
     setLoading(false)
+  }
+
+  async function handleDelete(admin) {
+    if (admin.id === adminProfile?.id) {
+      alert("Vous ne pouvez pas supprimer votre propre compte.")
+      return
+    }
+    if (!confirm(`Retirer l'accès administrateur de ${admin.nom} (${admin.email}) ?\n\nSon compte de connexion restera visible dans Supabase Authentication (à supprimer manuellement là-bas si besoin), mais il perdra tout accès à LogiFec.`)) return
+
+    setDeletingId(admin.id)
+    const { error } = await supabase.from('admins').delete().eq('id', admin.id)
+    setDeletingId(null)
+    if (error) {
+      alert(`Erreur lors de la suppression : ${error.message}`)
+      return
+    }
+    load()
   }
 
   async function handleInvite(e) {
@@ -112,6 +130,11 @@ export default function Administrateurs() {
                 <div style={styles.email}><Mail size={11} /> {a.email}</div>
               </div>
               <div style={styles.dateAdded}>Depuis le {new Date(a.created_at).toLocaleDateString('fr-FR')}</div>
+              {a.id !== adminProfile?.id && (
+                <button onClick={() => handleDelete(a)} disabled={deletingId === a.id} style={styles.deleteIconBtn}>
+                  <Trash2 size={15} color="var(--coral)" />
+                </button>
+              )}
             </div>
           ))}
         </div>
@@ -152,4 +175,8 @@ const styles = {
   youTag: { fontSize: 10.5, background: 'var(--emerald-soft)', color: 'var(--emerald)', padding: '2px 7px', borderRadius: 10, marginLeft: 8, fontWeight: 700 },
   email: { fontSize: 12.5, color: 'var(--ink-soft)', display: 'flex', alignItems: 'center', gap: 5, marginTop: 2 },
   dateAdded: { fontSize: 12, color: 'var(--ink-soft)' },
+  deleteIconBtn: {
+    width: 30, height: 30, display: 'flex', alignItems: 'center', justifyContent: 'center',
+    background: 'transparent', border: 'none', cursor: 'pointer', borderRadius: 6, flexShrink: 0, marginLeft: 8,
+  },
 }
