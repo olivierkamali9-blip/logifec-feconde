@@ -117,6 +117,8 @@ export default function VehiculeFiche() {
         return
       }
       payload.created_by = validCreatorId
+      console.log('DEBUG payload envoyé à Supabase:', JSON.stringify(payload, null, 2))
+      console.log('DEBUG adminProfile complet:', JSON.stringify(adminProfile, null, 2))
       const { data, error: insertError } = await supabase.from('vehicules').insert(payload).select().single()
       setSaving(false)
       if (insertError) { setError(`Erreur lors de la création : ${insertError.message}`); return }
