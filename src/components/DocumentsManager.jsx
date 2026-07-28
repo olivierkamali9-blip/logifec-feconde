@@ -20,11 +20,12 @@ export default function DocumentsManager({ vehiculeId, documents, onChange, admi
     setUploading(true)
 
     const ext = file.name.split('.').pop()
-    const path = `${vehiculeId}/${Date.now()}-${typeDocument.replace(/\s+/g, '_')}.${ext}`
+    const safeType = typeDocument.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-zA-Z0-9]+/g, '_')
+    const path = `${vehiculeId}/${Date.now()}-${safeType}.${ext}`
 
     const { error: uploadError } = await supabase.storage.from('vehicule-documents').upload(path, file)
     if (uploadError) {
-      setError("Erreur lors de l'envoi du fichier.")
+      setError(`Erreur lors de l'envoi du fichier : ${uploadError.message}`)
       setUploading(false)
       return
     }
@@ -38,12 +39,12 @@ export default function DocumentsManager({ vehiculeId, documents, onChange, admi
       fichier_url: urlData.publicUrl,
       nom_fichier: file.name,
       date_expiration: dateExpiration || null,
-      uploaded_by: adminId,
+      uploaded_by: adminId || null,
     })
 
     setUploading(false)
     if (insertError) {
-      setError("Erreur lors de l'enregistrement du document.")
+      setError(`Erreur lors de l'enregistrement du document : ${insertError.message}`)
       return
     }
 

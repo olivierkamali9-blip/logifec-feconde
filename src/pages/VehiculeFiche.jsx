@@ -76,10 +76,11 @@ export default function VehiculeFiche() {
 
     if (photoFile) {
       const ext = photoFile.name.split('.').pop()
-      const path = `${form.id_engin}-${Date.now()}.${ext}`
+      const safeIdEngin = (form.id_engin || 'vehicule').replace(/[^a-zA-Z0-9-]/g, '_')
+      const path = `${safeIdEngin}-${Date.now()}.${ext}`
       const { error: uploadError } = await supabase.storage.from('vehicule-photos').upload(path, photoFile, { upsert: true })
       if (uploadError) {
-        setError("Erreur lors de l'envoi de la photo.")
+        setError(`Erreur lors de l'envoi de la photo : ${uploadError.message}`)
         setSaving(false)
         return
       }
@@ -87,24 +88,39 @@ export default function VehiculeFiche() {
       photoUrl = urlData.publicUrl
     }
 
-    const payload = { ...form, photo_url: photoUrl, updated_at: new Date().toISOString() }
-    // clean empty numeric/date fields
-    ;['valeur_achat'].forEach((k) => { if (payload[k] === '') payload[k] = null })
-    ;['date_affectation', 'date_acquisition', 'date_expiration_assurance'].forEach((k) => { if (payload[k] === '') payload[k] = null })
+    // Construire le payload uniquement à partir des champs connus du formulaire + champs système
+    const payload = { photo_url: photoUrl, updated_at: new Date().toISOString() }
+    const dateFields = new Set()
+    const numberFields = new Set()
+    FORM_SECTIONS.forEach((section) => {
+      section.fields.forEach((f) => {
+        let value = form[f.key]
+        if (f.type === 'date') { dateFields.add(f.key); if (value === '' || value === undefined) value = null }
+        if (f.type === 'number') { numberFields.add(f.key); if (value === '' || value === undefined) value = null; else value = Number(value) }
+        if (value === undefined) value = null
+        payload[f.key] = value
+      })
+    })
+    payload.id_engin = form.id_engin
+    payload.statut = form.statut || 'Actif'
 
     if (isNew) {
-      payload.created_by = adminProfile?.id
+      if (!adminProfile?.id) {
+        setError("Profil administrateur non chargé. Patientez un instant et réessayez.")
+        setSaving(false)
+        return
+      }
+      payload.created_by = adminProfile.id
       const { data, error: insertError } = await supabase.from('vehicules').insert(payload).select().single()
       setSaving(false)
-      if (insertError) { setError("Erreur lors de la création du véhicule."); return }
+      if (insertError) { setError(`Erreur lors de la création : ${insertError.message}`); return }
       navigate(`/admin/vehicules/${data.id}`)
     } else {
-      delete payload.id
-      delete payload.created_at
       const { error: updateError } = await supabase.from('vehicules').update(payload).eq('id', id)
       setSaving(false)
-      if (updateError) { setError("Erreur lors de l'enregistrement."); return }
+      if (updateError) { setError(`Erreur lors de l'enregistrement : ${updateError.message}`); return }
       setForm((f) => ({ ...f, photo_url: photoUrl }))
+      setPhotoFile(null)
     }
   }
 
