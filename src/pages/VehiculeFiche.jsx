@@ -47,6 +47,7 @@ export default function VehiculeFiche() {
       if (isNew) {
         const newId = await genererIdEngin()
         setForm((f) => ({ ...f, id_engin: newId }))
+        setLoading(false)
       } else {
         const { data } = await supabase.from('vehicules').select('*').eq('id', id).single()
         if (data) {
