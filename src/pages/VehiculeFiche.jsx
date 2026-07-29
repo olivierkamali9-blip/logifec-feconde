@@ -24,12 +24,6 @@ export default function VehiculeFiche() {
   const { adminProfile } = useAuth()
   const isNew = id === 'nouveau'
 
-  useEffect(() => {
-    if (id === 'undefined' || id === undefined) {
-      navigate('/admin/vehicules', { replace: true })
-    }
-  }, [id, navigate])
-
   const [form, setForm] = useState(emptyForm)
   const [documents, setDocuments] = useState([])
   const [photoFile, setPhotoFile] = useState(null)
@@ -46,6 +40,10 @@ export default function VehiculeFiche() {
 
   useEffect(() => {
     async function init() {
+      if (id === 'undefined' || !id) {
+        navigate('/admin/vehicules', { replace: true })
+        return
+      }
       if (isNew) {
         const newId = await genererIdEngin()
         setForm((f) => ({ ...f, id_engin: newId }))
