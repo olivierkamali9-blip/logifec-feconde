@@ -127,7 +127,7 @@ export default function VehiculeFiche() {
     } else {
       const { error: updateError } = await supabase.from('vehicules').update(payload).eq('id', id)
       setSaving(false)
-      if (updateError) { setError(`Erreur lors de l'enregistrement : ${updateError.message}`); return }
+      if (updateError) { setError(`Erreur lors de l'enregistrement : ${updateError.message} | DEBUG isNew=${isNew} id="${id}"`); return }
       setForm((f) => ({ ...f, photo_url: photoUrl }))
       setPhotoFile(null)
     }
