@@ -112,16 +112,17 @@ export default function VehiculeFiche() {
     if (isNew) {
       const validCreatorId = adminProfile?.id && adminProfile.id !== 'undefined' ? adminProfile.id : null
       if (!validCreatorId) {
-        setError("Profil administrateur non chargé correctement. Rechargez la page et réessayez.")
+        setError(`Profil administrateur non chargé correctement. DEBUG adminProfile: ${JSON.stringify(adminProfile)}`)
         setSaving(false)
         return
       }
       payload.created_by = validCreatorId
-      console.log('DEBUG payload envoyé à Supabase:', JSON.stringify(payload, null, 2))
-      console.log('DEBUG adminProfile complet:', JSON.stringify(adminProfile, null, 2))
       const { data, error: insertError } = await supabase.from('vehicules').insert(payload).select().single()
       setSaving(false)
-      if (insertError) { setError(`Erreur lors de la création : ${insertError.message}`); return }
+      if (insertError) {
+        setError(`Erreur lors de la création : ${insertError.message} | DEBUG payload: ${JSON.stringify(payload)}`)
+        return
+      }
       navigate(`/admin/vehicules/${data.id}`)
     } else {
       const { error: updateError } = await supabase.from('vehicules').update(payload).eq('id', id)
