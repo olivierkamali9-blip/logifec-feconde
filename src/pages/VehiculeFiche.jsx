@@ -40,10 +40,6 @@ export default function VehiculeFiche() {
 
   useEffect(() => {
     async function init() {
-      if (id === 'undefined' || !id) {
-        navigate('/admin/vehicules', { replace: true })
-        return
-      }
       if (isNew) {
         const newId = await genererIdEngin()
         setForm((f) => ({ ...f, id_engin: newId }))
@@ -148,7 +144,7 @@ export default function VehiculeFiche() {
     navigate('/admin/vehicules')
   }
 
-  if (loading) return <div style={styles.page}><p style={{ color: 'var(--ink-soft)' }}>Chargement...</p></div>
+  if (loading) return <div style={styles.page}><p style={{ color: 'var(--ink-soft)' }}>Chargement... (DEBUG id="{String(id)}" isNew={String(isNew)})</p></div>
 
   return (
     <div style={styles.page} className="lf-page">
