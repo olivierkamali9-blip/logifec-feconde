@@ -7,6 +7,7 @@ import Login from './pages/Login'
 import Dashboard from './pages/Dashboard'
 import VehiculesListe from './pages/VehiculesListe'
 import VehiculeFiche from './pages/VehiculeFiche'
+import VehiculeNouveau from './pages/VehiculeNouveau'
 import Administrateurs from './pages/Administrateurs'
 import Parametres from './pages/Parametres'
 import ScanPublic from './pages/ScanPublic'
@@ -22,7 +23,7 @@ function App() {
           <Route path="/admin" element={<ProtectedRoute><AdminLayout /></ProtectedRoute>}>
             <Route index element={<Dashboard />} />
             <Route path="vehicules" element={<VehiculesListe />} />
-            <Route path="vehicules/nouveau" element={<VehiculeFiche />} />
+            <Route path="vehicules/nouveau" element={<VehiculeNouveau />} />
             <Route path="vehicules/:id" element={<VehiculeFiche />} />
             <Route path="administrateurs" element={<Administrateurs />} />
             <Route path="parametres" element={<Parametres />} />

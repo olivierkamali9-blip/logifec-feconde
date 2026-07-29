@@ -1,50 +1,43 @@
-import { useEffect, useState, useCallback } from 'react'
-import { useParams, useNavigate, Link } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { useNavigate, Link } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../context/AuthContext'
 import { FORM_SECTIONS } from '../utils/formFields'
-import DocumentsManager from '../components/DocumentsManager'
-import QRCodeCard from '../components/QRCodeCard'
-import StatutBadge from '../components/StatutBadge'
-import { ArrowLeft, Camera, Save, Trash2, Truck, Loader2 } from 'lucide-react'
+import { genererIdEngin } from '../utils/idEngin'
+import { ArrowLeft, Camera, Save, Truck, Loader2 } from 'lucide-react'
 
-export default function VehiculeFiche() {
-  const { id } = useParams()
+const emptyForm = {
+  id_engin: '', type: '', categorie: '', marque: '', modele: '', annee_fabrication: '',
+  numero_chassis: '', numero_moteur: '', plaque_immatriculation: '', couleur: '',
+  type_carburant: '', capacite_reservoir: '', base_affectee: '', chauffeur_principal: '',
+  responsable_base: '', date_affectation: '', statut: 'Actif', date_acquisition: '',
+  valeur_achat: '', fournisseur: '', source_financement: '', compagnie_assurance: '',
+  date_expiration_assurance: '', commentaire: '',
+}
+
+export default function VehiculeNouveau() {
   const navigate = useNavigate()
   const { adminProfile } = useAuth()
 
-  const [form, setForm] = useState(null)
-  const [documents, setDocuments] = useState([])
+  const [form, setForm] = useState(emptyForm)
   const [photoFile, setPhotoFile] = useState(null)
   const [photoPreview, setPhotoPreview] = useState(null)
-  const [loading, setLoading] = useState(true)
+  const [ready, setReady] = useState(false)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
-  const [notFound, setNotFound] = useState(false)
-
-  const loadDocuments = useCallback(async () => {
-    const { data } = await supabase.from('documents').select('*').eq('vehicule_id', id).order('uploaded_at', { ascending: false })
-    setDocuments(data || [])
-  }, [id])
 
   useEffect(() => {
     let cancelled = false
     async function init() {
-      const { data, error: fetchError } = await supabase.from('vehicules').select('*').eq('id', id).single()
-      if (cancelled) return
-      if (fetchError || !data) {
-        setNotFound(true)
-        setLoading(false)
-        return
+      const newId = await genererIdEngin()
+      if (!cancelled) {
+        setForm((f) => ({ ...f, id_engin: newId }))
+        setReady(true)
       }
-      setForm(data)
-      setPhotoPreview(data.photo_url)
-      await loadDocuments()
-      if (!cancelled) setLoading(false)
     }
     init()
     return () => { cancelled = true }
-  }, [id, loadDocuments])
+  }, [])
 
   function handleFieldChange(key, value) {
     setForm((f) => ({ ...f, [key]: value }))
@@ -67,8 +60,14 @@ export default function VehiculeFiche() {
     setSaving(true)
     setError('')
 
-    let photoUrl = form.photo_url || null
+    const validCreatorId = adminProfile?.id && adminProfile.id !== 'undefined' ? adminProfile.id : null
+    if (!validCreatorId) {
+      setError("Profil administrateur non chargé. Rechargez la page et réessayez.")
+      setSaving(false)
+      return
+    }
 
+    let photoUrl = null
     if (photoFile) {
       const ext = photoFile.name.split('.').pop()
       const safeIdEngin = (form.id_engin || 'vehicule').replace(/[^a-zA-Z0-9-]/g, '_')
@@ -83,7 +82,7 @@ export default function VehiculeFiche() {
       photoUrl = urlData.publicUrl
     }
 
-    const payload = { photo_url: photoUrl, updated_at: new Date().toISOString() }
+    const payload = { photo_url: photoUrl, id_engin: form.id_engin, statut: form.statut || 'Actif', created_by: validCreatorId }
     FORM_SECTIONS.forEach((section) => {
       section.fields.forEach((f) => {
         let value = form[f.key]
@@ -93,37 +92,17 @@ export default function VehiculeFiche() {
         payload[f.key] = value
       })
     })
-    payload.id_engin = form.id_engin
-    payload.statut = form.statut || 'Actif'
 
-    const { error: updateError } = await supabase.from('vehicules').update(payload).eq('id', id)
+    const { data, error: insertError } = await supabase.from('vehicules').insert(payload).select().single()
     setSaving(false)
-    if (updateError) {
-      setError(`Erreur lors de l'enregistrement : ${updateError.message}`)
+    if (insertError) {
+      setError(`Erreur lors de la création : ${insertError.message}`)
       return
     }
-    setForm((f) => ({ ...f, photo_url: photoUrl }))
-    setPhotoFile(null)
+    navigate(`/admin/vehicules/${data.id}`, { replace: true })
   }
 
-  async function handleDeleteVehicule() {
-    if (!confirm(`Supprimer définitivement le véhicule ${form.id_engin} ? Cette action est irréversible.`)) return
-    await supabase.from('vehicules').delete().eq('id', id)
-    navigate('/admin/vehicules')
-  }
-
-  if (loading) return <div style={styles.page}><p style={{ color: 'var(--ink-soft)' }}>Chargement...</p></div>
-
-  if (notFound || !form) {
-    return (
-      <div style={styles.page}>
-        <Link to="/admin/vehicules" style={styles.backLink}>
-          <ArrowLeft size={15} /> Retour aux véhicules
-        </Link>
-        <p style={{ color: 'var(--ink-soft)', marginTop: 20 }}>Véhicule introuvable.</p>
-      </div>
-    )
-  }
+  if (!ready) return <div style={styles.page}><p style={{ color: 'var(--ink-soft)' }}>Préparation du formulaire...</p></div>
 
   return (
     <div style={styles.page} className="lf-page">
@@ -149,12 +128,9 @@ export default function VehiculeFiche() {
             <div style={{ flex: 1 }}>
               <div style={styles.idRow}>
                 <span style={styles.idEngin}>{form.id_engin}</span>
-                <StatutBadge statut={form.statut} />
               </div>
-              <h1 style={styles.title}>
-                {form.marque || form.modele ? `${form.marque || ''} ${form.modele || ''}`.trim() : 'Véhicule'}
-              </h1>
-              <p style={styles.subtitle}>{form.plaque_immatriculation || 'Plaque non renseignée'}</p>
+              <h1 style={styles.title}>Nouveau véhicule</h1>
+              <p style={styles.subtitle}>Remplissez les informations disponibles, vous pourrez compléter plus tard.</p>
             </div>
           </div>
 
@@ -192,23 +168,14 @@ export default function VehiculeFiche() {
           <div style={styles.actionsRow}>
             <button type="submit" disabled={saving} style={styles.saveBtn}>
               {saving ? <Loader2 size={15} style={{ animation: 'spin 0.8s linear infinite' }} /> : <Save size={15} />}
-              {saving ? 'Enregistrement...' : 'Enregistrer les modifications'}
-            </button>
-            <button type="button" onClick={handleDeleteVehicule} style={styles.deleteBtn}>
-              <Trash2 size={15} /> Supprimer le véhicule
+              {saving ? 'Création...' : 'Créer le véhicule'}
             </button>
           </div>
         </form>
 
         <div style={styles.sideCol}>
           <div style={styles.sideCard}>
-            <h3 style={styles.sectionTitle}>Code QR</h3>
-            <p style={styles.sideDesc}>À imprimer et fixer sur le véhicule. Le scan mène directement à sa fiche.</p>
-            <QRCodeCard vehicule={form} />
-          </div>
-
-          <div style={styles.sideCard}>
-            <DocumentsManager vehiculeId={id} documents={documents} onChange={loadDocuments} adminId={adminProfile?.id} />
+            <p style={styles.sideDesc}>Enregistrez le véhicule pour générer son code QR et ajouter ses documents.</p>
           </div>
         </div>
       </div>
@@ -255,10 +222,6 @@ const styles = {
   saveBtn: {
     display: 'flex', alignItems: 'center', gap: 8, background: 'var(--navy)', color: '#fff',
     border: 'none', borderRadius: 8, padding: '11px 20px', fontSize: 13.5, fontWeight: 600, cursor: 'pointer',
-  },
-  deleteBtn: {
-    display: 'flex', alignItems: 'center', gap: 8, background: '#fff', color: 'var(--coral)',
-    border: '1px solid var(--coral-soft)', borderRadius: 8, padding: '11px 20px', fontSize: 13.5, fontWeight: 600, cursor: 'pointer',
   },
   sideCard: {
     background: '#fff', border: '1px solid var(--line-soft)', borderRadius: 'var(--radius-md)',
