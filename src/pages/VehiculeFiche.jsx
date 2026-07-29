@@ -24,6 +24,12 @@ export default function VehiculeFiche() {
   const { adminProfile } = useAuth()
   const isNew = id === 'nouveau'
 
+  useEffect(() => {
+    if (id === 'undefined' || id === undefined) {
+      navigate('/admin/vehicules', { replace: true })
+    }
+  }, [id, navigate])
+
   const [form, setForm] = useState(emptyForm)
   const [documents, setDocuments] = useState([])
   const [photoFile, setPhotoFile] = useState(null)
@@ -121,6 +127,10 @@ export default function VehiculeFiche() {
       setSaving(false)
       if (insertError) {
         setError(`Erreur lors de la création : ${insertError.message} | DEBUG payload: ${JSON.stringify(payload)}`)
+        return
+      }
+      if (!data?.id) {
+        setError(`Le véhicule a peut-être été créé mais la réponse est incomplète. Retournez à la liste des véhicules pour vérifier. DEBUG data: ${JSON.stringify(data)}`)
         return
       }
       navigate(`/admin/vehicules/${data.id}`)
