@@ -151,6 +151,7 @@ export default function VehiculeFiche() {
       <Link to="/admin/vehicules" style={styles.backLink}>
         <ArrowLeft size={15} /> Retour aux véhicules
       </Link>
+      <p style={{ fontSize: 11, color: 'red', marginBottom: 10 }}>DEBUG PERMANENT: id="{String(id)}" isNew={String(isNew)}</p>
 
       <div style={styles.layout} className="lf-fiche-layout">
         <form onSubmit={handleSave} style={styles.formCol}>
